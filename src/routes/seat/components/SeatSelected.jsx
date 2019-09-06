@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import * as actions from '../../../store/actions/seat';
 import './SeatSelected.css';
 
 
-const SeatSelected = ({ data, onRemove }) => {
+const SeatSelected = ({ data, removeSeat }) => {
+
   if (!data.length) {
     return null;
   }
@@ -17,7 +20,7 @@ const SeatSelected = ({ data, onRemove }) => {
                 <div className="movieTicket__pos">{seat.rowIndex}排{seat.colIndex}座</div>
                 <div className="movieTicket__price"> <i className="movieTicket__tag"/>33元</div>
               </div>
-              <div className="movieTicket__close"  onClick={() => onRemove(seat.id)}></div>
+              <div className="movieTicket__close"  onClick={() => removeSeat(seat.id)}></div>
             </li>
           ))
         }
@@ -29,7 +32,22 @@ const SeatSelected = ({ data, onRemove }) => {
 
 SeatSelected.propTypes = {
   data: PropTypes.array.isRequired,
-  onRemove: PropTypes.func.isRequired
+  removeSeat: PropTypes.func.isRequired
 };
 
-export default SeatSelected;
+const mapStateToProps = state => {
+  return {
+    data: state
+  };
+};
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     removeSeat: id => {
+//       dispatch(actions.removeSeat(id));
+//     }
+//   };
+// };
+
+
+export default connect(mapStateToProps,actions)(SeatSelected);

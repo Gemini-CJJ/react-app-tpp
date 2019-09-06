@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { data } from '../mock/seat.json';
+import * as actions from '../../../store/actions/seat';
+import { connect } from 'react-redux';
 
 const SEAT_WIDTH = 50;
 const SEAT_HEIGHT = 50;
@@ -101,13 +103,13 @@ class SeatSelector extends Component {
 
     if (seatIndex > -1) {
       // 如果已经选择了，需要取消选择，反之选择座位
-      this.props.onRemove(seat.id);
+      this.props.removeSeat(seat.id);
     } else {
       if (this.props.selectSeat.length >= 4) {
         // 如果已经选择了四个座位，则不能再选
         alert('不能超过四个座位');
       } else {
-        this.props.onAdd(seat);
+        this.props.addSeat(seat);
       }
     }
   }
@@ -116,13 +118,20 @@ class SeatSelector extends Component {
     return (
       <canvas onClick={this.clickSeat} style={{width: CANVAS_WIDTH, height: CANVAS_HEIGHT}} ref="canvas" width={DRAW_CANVAS_WIDTH} height={DRAW_CANVAS_HEIGHT}/>
     );
+
   }
 }
 
 SeatSelector.propTypes = {
   selectSeat: PropTypes.array.isRequired,
-  onRemove: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired
+  removeSeat: PropTypes.func.isRequired,
+  addSeat: PropTypes.func.isRequired
 };
 
-export default SeatSelector;
+const mapStateToProps = state => {
+  return {
+    selectSeat: state,
+  };
+}
+
+export default connect(mapStateToProps,actions)(SeatSelector);
